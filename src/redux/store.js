@@ -3,6 +3,7 @@ import logger from 'redux-logger';
 import createSagaMiddleware from 'redux-saga';
 import { takeEvery, put } from 'redux-saga/effects';
 import axios from 'axios';
+import { composeWithDevTools } from '@redux-devtools/extension';
 
 // Create the rootSaga generator function
 function* rootSaga() {
@@ -56,10 +57,10 @@ const genres = (state = [], action) => {
   }
 }
 
-const currentMovie = (state = [], action)=>{
+const currentMovie = (state = {}, action)=>{
   switch (action.type){
     case 'SET_CURRENT':
-      return action.payload
+      return action.payload[0]
     default:
       return state
   }
@@ -73,7 +74,9 @@ const storeInstance = createStore(
     currentMovie
   }),
   // Add sagaMiddleware to our store
-  applyMiddleware(sagaMiddleware, logger),
+  composeWithDevTools(
+    applyMiddleware(sagaMiddleware, logger),
+  )
 );
 
 // Pass rootSaga into our sagaMiddleware
