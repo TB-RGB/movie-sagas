@@ -23,28 +23,31 @@ const EditMovie = () => {
   const [newGenre, setNewGenre] = useState("");
   const [newDescription, setNewDescription] = useState(movObj.description);
 
-  const updateMovie =()=>{
-    if ((newTitle === movObj.title && newDescription === movObj.description) || newGenre === ''){
-        alert("No Edits were made, must add a genre (for now :D)")
-        return
+  const updateMovie = () => {
+    if (
+      (newTitle === movObj.title && newDescription === movObj.description) ||
+      newGenre === ""
+    ) {
+      alert("No Edits were made, must add a genre (for now :D)");
+      return;
     } else {
-        const editObject = {
-            title: newTitle,
-            description: newDescription,
-            movie_id: id.id,
-            genre_id: newGenre
-        }
-        dispatch({type: 'UPDATE_MOVIE', payload: editObject})
-        history.push(`/details/${id.id}`)
+      const editObject = {
+        title: newTitle,
+        description: newDescription,
+        movie_id: id.id,
+        genre_id: newGenre,
+      };
+      dispatch({ type: "UPDATE_MOVIE", payload: editObject });
+      history.push(`/details/${id.id}`);
     }
-  }
+  };
 
-  const cancelEdit = ()=>{
-    setNewTitle('')
-    setNewDescription('')
-    setNewGenre('')
-    history.push(`/details/${id.id}`)
-  }
+  const cancelEdit = () => {
+    setNewTitle("");
+    setNewDescription("");
+    setNewGenre("");
+    history.push(`/details/${id.id}`);
+  };
 
   return (
     <>
@@ -82,8 +85,8 @@ const EditMovie = () => {
         onChange={(event) => setNewDescription(event.target.value)}
       ></textarea>
       <br />
-      <button onClick={()=>updateMovie()}>Save Edit</button>
-      <button onClick={()=>cancelEdit()}>Cancel Edit</button>
+      <button onClick={() => updateMovie()}>Save Edit</button>
+      <button onClick={() => cancelEdit()}>Cancel Edit</button>
     </>
   );
 };
