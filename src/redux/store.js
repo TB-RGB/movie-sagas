@@ -7,6 +7,7 @@ import axios from 'axios';
 // Create the rootSaga generator function
 function* rootSaga() {
   yield takeEvery('FETCH_MOVIES', fetchAllMovies);
+  yield takeEvery('FETCH_CURRENT', fetchCurrent)
 }
 
 function* fetchAllMovies() {
@@ -20,6 +21,15 @@ function* fetchAllMovies() {
     });
   } catch (error) {
     console.log('fetchAllMovies error:', error);
+  }
+}
+
+function* fetchCurrent(action){
+  try{
+    const currentResponse = yield axios(`/api/movies/${action.payload.id}`)
+    yield put({type: 'SET_CURRENT', payload: currentResponse.data})
+  } catch (err){
+    console.log('Error in current GET saga', err)
   }
 }
 
@@ -46,11 +56,21 @@ const genres = (state = [], action) => {
   }
 }
 
+const currentMovie = (state = [], action)=>{
+  switch (action.type){
+    case 'SET_CURRENT':
+      return action.payload
+    default:
+      return state
+  }
+}
+
 // Create one store that all components can use
 const storeInstance = createStore(
   combineReducers({
     movies,
     genres,
+    currentMovie
   }),
   // Add sagaMiddleware to our store
   applyMiddleware(sagaMiddleware, logger),
