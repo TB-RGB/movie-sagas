@@ -26,7 +26,7 @@ function MovieList() {
           return (
             <div data-testid='movieItem' key={movie.id}>
               <h3>{movie.title}</h3>
-              <img onClick={()=>imgClick(movie.id)} src={movie.poster} alt={movie.title}/>
+              <img onClick={()=>imgClick(movie.id)} src={movie.poster} alt={movie.title} data-testid="toDetails"/>
             </div>
           );
         })}
