@@ -1,16 +1,27 @@
-import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useSelector, useDispatch } from "react-redux";
+import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { useEffect } from "react";
 
 const Details = () => {
   const movObj = useSelector((store) => store.currentMovie);
   const movGenres = movObj.genres;
   const history = useHistory()
+  const dispatch = useDispatch()
+  const id = useParams()
+
+  console.log('useParams id', id)
+
+  useEffect(() => {
+    dispatch({ type: 'FETCH_MOVIES' });
+    dispatch({type: 'FETCH_CURRENT', payload: id})
+  }, []);
 
   return (
     <>
-      <h1 data-testid="movieDetails">{movObj.title}</h1>
+    <div data-testid="movieDetails">
+      <h1>{movObj.title}</h1>
       <br />
-      <img src={movObj.poster} alt="" />
+      <img src={movObj.poster} alt={movObj.title} />
       <h3>Genres</h3>
       {movGenres ? (
         movGenres.map((type) => <div key={type.name}>{type.name}</div>)
@@ -21,6 +32,7 @@ const Details = () => {
       <div>{movObj.description}</div>
       <br />
       <button onClick={()=>history.push('/')} data-testid="toList">Back to List</button>
+      </div>
     </>
   );
 };

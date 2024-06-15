@@ -8,7 +8,9 @@ import { composeWithDevTools } from '@redux-devtools/extension';
 // Create the rootSaga generator function
 function* rootSaga() {
   yield takeEvery('FETCH_MOVIES', fetchAllMovies);
-  yield takeEvery('FETCH_CURRENT', fetchCurrent)
+  yield takeEvery('FETCH_CURRENT', fetchCurrent);
+  yield takeEvery('FETCH_GENRES', fetchGenres)
+  yield takeEvery('ADD_MOVIE', addMovie)
 }
 
 function* fetchAllMovies() {
@@ -32,6 +34,24 @@ function* fetchCurrent(action){
   } catch (err){
     console.log('Error in current GET saga', err)
   }
+}
+
+function* fetchGenres(action){
+  try {
+    const genreResponse = yield axios('/api/genres')
+    yield put({type: 'SET_GENRES', payload: genreResponse.data})
+  } catch(err){
+    console.log('Error in GET genres saga', err)
+  }
+}
+
+function* addMovie(action){
+ try {
+  yield axios.post('/api/movies', action.payload)
+  yield put({type: 'FETCH_MOVIES'})
+ } catch (err) {
+  console.log('Error in POST saga', err)
+ }
 }
 
 // Create sagaMiddleware
