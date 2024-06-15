@@ -77,16 +77,11 @@ router.get("/:id", (req, res) => {
   "movies"."description" AS "description",
   "movies"."poster" AS "poster",
   jsonb_agg(jsonb_build_object('name', "genres"."name")) AS "genres"
-FROM
-  "movies"
-JOIN
-  "movies_genres" ON "movies"."id" = "movies_genres"."movie_id"
-JOIN
-  "genres" ON "movies_genres"."genre_id" = "genres"."id"
-WHERE
-  "movies"."id" = $1
-GROUP BY
-  "movies"."id";
+  FROM "movies"
+  JOIN "movies_genres" ON "movies"."id" = "movies_genres"."movie_id"
+  JOIN "genres" ON "movies_genres"."genre_id" = "genres"."id"
+  WHERE "movies"."id" = $1
+  GROUP BY "movies"."id";
   `;
   const currentId = [req.params.id];
   pool
@@ -99,5 +94,32 @@ GROUP BY
       res.sendStatus(500);
     });
 });
+
+router.put('/edit', (req,res)=>{
+  const queryText = `
+  UPDATE "movies" SET "title" = $1, "description" = $2
+  WHERE "id"=$3;
+  `
+  const valArray = [req.body.title, req.body.description, req.body.movie_id]
+
+  pool.query(queryText, valArray)
+    .then(response=>{
+      const genreQuery = `
+       INSERT INTO "movies_genres" 
+          ("movie_id", "genre_id")
+          VALUES
+          ($1, $2); 
+      `
+      const valArray = [req.body.movie_id, req.body.genre_id]
+
+      pool.query(genreQuery, valArray)
+        .then(response=>{
+          res.sendStatus(204)
+        })
+        .catch(err=>{
+          console.log('Error in PUT query', err)
+        })
+    })
+})
 
 module.exports = router;

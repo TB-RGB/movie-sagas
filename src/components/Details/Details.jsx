@@ -20,13 +20,14 @@ const Details = () => {
     <>
     <div data-testid="movieDetails">
       <h1>{movObj.title}</h1>
+      <button onClick={()=>history.push(`/edit/${movObj.movie_id}`)}>Edit Movie</button>
       <br />
       <img src={movObj.poster} alt={movObj.title} />
       <h3>Genres</h3>
       {movGenres ? (
         movGenres.map((type) => <div key={type.name}>{type.name}</div>)
       ) : (
-        <div>Loading genres...</div>
+        <div>Loading genres :D</div>
       )}
       <br />
       <div>{movObj.description}</div>
