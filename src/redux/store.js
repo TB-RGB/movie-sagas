@@ -11,6 +11,7 @@ function* rootSaga() {
   yield takeEvery('FETCH_CURRENT', fetchCurrent);
   yield takeEvery('FETCH_GENRES', fetchGenres)
   yield takeEvery('ADD_MOVIE', addMovie)
+  yield takeEvery('UPDATE_MOVIE', updateMovie)
 }
 
 function* fetchAllMovies() {
@@ -52,6 +53,16 @@ function* addMovie(action){
  } catch (err) {
   console.log('Error in POST saga', err)
  }
+}
+
+function* updateMovie(action){
+  try {
+    yield axios.put('/api/movies/edit', action.payload)
+    yield put({type: 'FETCH_MOVIES'})
+
+  } catch (err){
+    console.log('Error in PUT movie saga', err)
+  }
 }
 
 // Create sagaMiddleware
