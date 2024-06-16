@@ -51,42 +51,68 @@ const EditMovie = () => {
 
   return (
     <>
-      <h1>{!newTitle ? movObj.title : newTitle}</h1>
-      <input
-        type="text"
-        value={!newTitle ? movObj.title : newTitle}
-        onChange={(event) => setNewTitle(event.target.value)}
-      />
-      <br />
-      <img src={movObj.poster} alt={newTitle} />
-      <h3>Genres</h3>
-      {movGenres ? (
-        movGenres.map((type) => <div key={type.name}>{type.name}</div>)
-      ) : (
-        <div>Loading genres :D</div>
-      )}
-      <select
-        name="Genres"
-        onChange={(event) => setNewGenre(event.target.value)}
-        value={newGenre}
-      >
-        <option value="">--Pick A Genre--</option>
-        {genreList.map((genre) => (
-          <option value={genre.id} key={genre.id}>
-            {genre.name}
-          </option>
-        ))}
-      </select>
-      <br />
-      <div>{!newDescription ? movObj.description : newDescription}</div>
+      <div className="flex items-center justify-center mt-5 mb-3">
+        <div className="card w-96 bg-gray-800 shadow-xl">
+          <div className="card-body items-center text-center">
+            <h1 className="card-title">
+              {!newTitle ? movObj.title : newTitle}
+            </h1>
+            <input
+              type="text"
+              value={!newTitle ? movObj.title : newTitle}
+              onChange={(event) => setNewTitle(event.target.value)}
+              className="input input-bordered input-info w-full max-w-xs"
+            />
+            <figure>
+              <img src={movObj.poster} alt={movObj.title} />
+            </figure>
+            <h3>Genres</h3>
+            <div className="join">
+              {movGenres ? (
+                movGenres.map((type) => (
+                  <span key={type.name} className="btn join-item">
+                    {type.name}
+                  </span>
+                ))
+              ) : (
+                <div>Loading genres :D</div>
+              )}
+            </div>
+            <select
+              name="Genres"
+              onChange={(event) => setNewGenre(event.target.value)}
+              value={newGenre}
+              className="select select-accent w-full max-w-xs my-1"
+            >
+              <option disabled value="">
+                --Pick A Genre--
+              </option>
+              {genreList.map((genre) => (
+                <option value={genre.id} key={genre.id}>
+                  {genre.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="prose sm:prose-base">
+          {!newDescription ? movObj.description : newDescription}
+        </div>
+      </div>
       <textarea
         name="editDescription"
         value={!newDescription ? movObj.description : newDescription}
         onChange={(event) => setNewDescription(event.target.value)}
+        className="textarea textarea-info w-full h-40 my-1"
       ></textarea>
       <br />
-      <button onClick={() => updateMovie()}>Save Edit</button>
-      <button onClick={() => cancelEdit()}>Cancel Edit</button>
+      <button className="btn btn-error" onClick={() => cancelEdit()}>
+        Cancel Edit
+      </button>
+      <button className="btn btn-accent mx-2" onClick={() => updateMovie()}>
+        Save Edit
+      </button>
     </>
   );
 };
